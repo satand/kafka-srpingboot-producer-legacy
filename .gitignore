@@ -1,0 +1,3 @@
+*.skip
+target/
+.vscode/settings.json
