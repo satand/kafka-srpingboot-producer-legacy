@@ -1,0 +1,16 @@
+spring:
+  main:
+    banner-mode: "off"
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:cluster-kafka-dev-kafka-bootstrap.amqstreams.svc:9095}
+    properties:
+      security.protocol: PLAINTEXT
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+
+app:
+  kafka:
+    topic: ${KAFKA_TOPIC:test}
+    send-interval-ms: ${KAFKA_SEND_INTERVAL_MS:5000}
