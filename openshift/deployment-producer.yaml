@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-springboot-producer-legacy
+  labels:
+    app: kafka-springboot-producer-legacy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-springboot-producer-legacy
+  template:
+    metadata:
+      labels:
+        app: kafka-springboot-producer-legacy
+    spec:
+      # imagePullSecrets:
+      #   - name: quay-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: producer
+          image: quay.io/<user>/kafka-springboot-producer-legacy:1.0.0
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          env:
+            # - name: HTTP_PROXY
+            #   value: "http://<indirizzo-proxy>:<porta>"
+            # - name: HTTPS_PROXY
+            #   value: "http://<indirizzo-proxy>:<porta>"
+            # - name: NO_PROXY
+            #   value: "localhost,127.0.0.1,.svc,.cluster.local"
+            # - name: http_proxy
+            #   value: "http://<indirizzo-proxy>:<porta>"
+            # - name: https_proxy
+            #   value: "http://<indirizzo-proxy>:<porta>"
+            # - name: no_proxy
+            #   value: "localhost,127.0.0.1,.svc,.cluster.local"
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "cluster-kafka-dev-kafka-bootstrap.amqstreams.svc:9095"
+            - name: KAFKA_TOPIC
+              value: "test"
+            - name: KAFKA_SEND_INTERVAL_MS
+              value: "5000"
+            - name: JAVA_MAX_MEM_RATIO
+              value: "50"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
